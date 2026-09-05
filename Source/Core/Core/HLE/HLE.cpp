@@ -5,7 +5,6 @@
 
 #include <algorithm>
 #include <array>
-#include <cstdio>
 #include <map>
 
 #include "Common/CommonTypes.h"
@@ -142,9 +141,6 @@ void PatchFunctions(Core::System& system)
         s_hooked_addresses[addr] = i;
         ppc_state.iCache.Invalidate(memory, jit_interface, addr);
       }
-      std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC HLE] Patching HLE function %s at 0x%08x\n",
-                   os_patches[i].name, symbol->address);
-      std::fflush(stderr);
       INFO_LOG_FMT(OSHLE, "Patching {} {:08x}", os_patches[i].name, symbol->address);
     }
   }
@@ -169,9 +165,6 @@ void Execute(const Core::CPUThreadGuard& guard, u32 current_pc, u32 hook_index)
   hook_index &= 0xFFFFF;
   if (hook_index > 0 && hook_index < os_patches.size())
   {
-    std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC HLE] Executing HLE hook %s (index %u) at PC 0x%08x\n",
-                 os_patches[hook_index].name, hook_index, current_pc);
-    std::fflush(stderr);
     os_patches[hook_index].function(guard);
   }
   else

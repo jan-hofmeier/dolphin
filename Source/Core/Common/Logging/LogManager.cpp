@@ -166,9 +166,8 @@ LogManager::LogManager()
 
   for (auto& container : m_log)
   {
-    const bool default_enable = std::string_view(container.m_short_name).starts_with("OSREPORT");
     container.m_enable = Config::Get(
-        Config::Info<bool>{{Config::System::Logger, "Logs", container.m_short_name}, default_enable});
+        Config::Info<bool>{{Config::System::Logger, "Logs", container.m_short_name}, false});
   }
 
   m_path_cutoff_point = DeterminePathCutOffPoint();
