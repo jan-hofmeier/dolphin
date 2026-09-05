@@ -68,8 +68,11 @@ static CoreTiming::EventType* s_event_finish_ppc_bootstrap;
 static CoreTiming::EventType* s_event_finish_ios_boot;
 
 constexpr u32 ADDR_LEGACY_MEM_SIZE = 0x28;
+constexpr u32 ADDR_BOARD_MODEL = 0x2c;
 constexpr u32 ADDR_LEGACY_ARENA_LOW = 0x30;
 constexpr u32 ADDR_LEGACY_ARENA_HIGH = 0x34;
+constexpr u32 ADDR_BUS_SPEED = 0xf8;
+constexpr u32 ADDR_CPU_SPEED = 0xfc;
 constexpr u32 ADDR_LEGACY_MEM_SIM_SIZE = 0xf0;
 
 constexpr u32 ADDR_MEM1_SIZE = 0x3100;
@@ -95,6 +98,7 @@ constexpr u32 ADDR_IOS_RESERVED_END = 0x314c;
 constexpr u32 ADDR_PH4 = 0x3150;
 constexpr u32 ADDR_PH5 = 0x3154;
 constexpr u32 ADDR_CONSOLE_TYPE_DEV = 0x30e6;
+constexpr u32 ADDR_GAME_ID_ADDRESS = 0x3184;
 constexpr u32 ADDR_APPLOADER_VERSION = 0x3188;
 constexpr u32 ADDR_RAM_VENDOR = 0x3158;
 constexpr u32 ADDR_BOOT_FLAG = 0x315c;
@@ -147,6 +151,11 @@ static bool SetupMemory(Memory::MemoryManager& memory, u64 ios_title_id, MemoryS
   constexpr u32 LOW_MEM1_REGION_SIZE = 0x3fff;
   memory.Memset(LOW_MEM1_REGION_START, 0, LOW_MEM1_REGION_SIZE);
 
+  memory.Write_U32(memory.GetRamSizeReal(), ADDR_LEGACY_MEM_SIZE);
+  memory.Write_U32(0x00000003, ADDR_BOARD_MODEL);
+  memory.Write_U32(0x0e7be2c0, ADDR_BUS_SPEED);
+  memory.Write_U32(0x2B73A840, ADDR_CPU_SPEED);
+
   memory.Write_U32(target_imv->mem1_physical_size, ADDR_MEM1_SIZE);
   memory.Write_U32(target_imv->mem1_simulated_size, ADDR_MEM1_SIM_SIZE);
   memory.Write_U32(target_imv->mem1_end, ADDR_MEM1_END);
@@ -170,12 +179,13 @@ static bool SetupMemory(Memory::MemoryManager& memory, u64 ios_title_id, MemoryS
   memory.Write_U32(PLACEHOLDER, ADDR_PH4);
   memory.Write_U32(PLACEHOLDER, ADDR_PH5);
   memory.Write_U16(0x8201, ADDR_CONSOLE_TYPE_DEV);
-  memory.Write_U32(target_imv->ios_version, ADDR_APPLOADER_VERSION);
   memory.Write_U32(target_imv->ram_vendor, ADDR_RAM_VENDOR);
   memory.Write_U8(0xDE, ADDR_BOOT_FLAG);
   memory.Write_U8(0xAD, ADDR_APPLOADER_FLAG);
   memory.Write_U16(0xBEEF, ADDR_DEVKIT_BOOT_PROGRAM_VERSION);
   memory.Write_U32(target_imv->sysmenu_sync, ADDR_SYSMENU_SYNC);
+  memory.Write_U32(0x80000000, ADDR_GAME_ID_ADDRESS);
+  memory.Write_U32(target_imv->ios_version, ADDR_APPLOADER_VERSION);
 
   memory.Write_U32(target_imv->mem1_physical_size, ADDR_LEGACY_MEM_SIZE);
   memory.Write_U32(target_imv->mem1_arena_begin, ADDR_LEGACY_ARENA_LOW);
