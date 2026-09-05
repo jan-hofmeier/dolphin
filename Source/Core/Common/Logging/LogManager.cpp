@@ -166,8 +166,7 @@ LogManager::LogManager()
 
   for (auto& container : m_log)
   {
-    const bool default_enable = (container.m_type == LogType::OSREPORT ||
-                                 container.m_type == LogType::OSREPORT_HLE);
+    const bool default_enable = std::string_view(container.m_short_name).starts_with("OSREPORT");
     container.m_enable = Config::Get(
         Config::Info<bool>{{Config::System::Logger, "Logs", container.m_short_name}, default_enable});
   }
