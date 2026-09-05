@@ -151,7 +151,6 @@ static bool SetupMemory(Memory::MemoryManager& memory, u64 ios_title_id, MemoryS
   constexpr u32 LOW_MEM1_REGION_SIZE = 0x3fff;
   memory.Memset(LOW_MEM1_REGION_START, 0, LOW_MEM1_REGION_SIZE);
 
-  memory.Write_U32(memory.GetRamSizeReal(), ADDR_LEGACY_MEM_SIZE);
   memory.Write_U32(0x00000003, ADDR_BOARD_MODEL);
   memory.Write_U32(0x0e7be2c0, ADDR_BUS_SPEED);
   memory.Write_U32(0x2B73A840, ADDR_CPU_SPEED);
