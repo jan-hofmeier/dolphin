@@ -327,12 +327,16 @@ void CEXIIPL::TransferByte(u8& data)
         // ignore the "enabled" bit - see CEXIIPL::CEXIIPL
         data = m_rom[dev_addr];
 
-        if (m_system.IsWii() && dev_addr < 4)
+        if (m_system.IsWii() && dev_addr < 0x100)
         {
           // In Wii mode, return the Barnacle / EXI UART debug device ID (0x04000000)
-          // so EXIGetID() in RVL_SDK identifies the EXI UART debug interface.
+          // followed by zeroes so EXIGetID() in RVL_SDK identifies the EXI UART device
+          // rather than reading GameCube IPL ASCII header bytes.
           constexpr std::array<u8, 4> wii_exi_uart_id = {0x04, 0x00, 0x00, 0x00};
-          data = wii_exi_uart_id[dev_addr];
+          if (dev_addr < 4)
+            data = wii_exi_uart_id[dev_addr];
+          else
+            data = 0x00;
         }
 
         if ((dev_addr >= 0x001AFF00) && (dev_addr <= 0x001FF474) && !m_fonts_loaded)
