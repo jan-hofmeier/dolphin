@@ -190,6 +190,9 @@ void TitleContext::DoState(PointerWrap& p)
 void TitleContext::Update(const ES::TMDReader& tmd_, const ES::TicketReader& ticket_,
                           DiscIO::Platform platform)
 {
+  std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC ES] TitleContext::Update for title_id: 0x%016lx\n", tmd_.GetTitleId());
+  std::fflush(stderr);
+
   if (!tmd_.IsValid() || !ticket_.IsValid())
   {
     ERROR_LOG_FMT(IOS_ES, "TMD or ticket is not valid -- refusing to update title context");
@@ -333,6 +336,9 @@ IPCReply ESDevice::SetUID(u32 uid, const IOCtlVRequest& request)
 
 bool ESDevice::LaunchTitle(u64 title_id, HangPPC hang_ppc)
 {
+  std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC ES] LaunchTitle: 0x%016lx hangPPC:%d\n", title_id, hang_ppc == HangPPC::Yes);
+  std::fflush(stderr);
+
   m_core.m_title_context.Clear();
   INFO_LOG_FMT(IOS_ES, "ES_Launch: Title context changed: (none)");
 
@@ -413,6 +419,9 @@ s32 ESDevice::WriteLaunchFile(const ES::TMDReader& tmd, Ticks ticks)
 
 bool ESDevice::LaunchPPCTitle(u64 title_id)
 {
+  std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC ES] LaunchPPCTitle: 0x%016lx\n", title_id);
+  std::fflush(stderr);
+
   u64 ticks = 0;
 
   const ES::TMDReader tmd = m_core.FindInstalledTMD(title_id, &ticks);
@@ -499,6 +508,9 @@ bool ESDevice::LaunchPPCTitle(u64 title_id)
 
 bool ESDevice::BootstrapPPC()
 {
+  std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC ES] BootstrapPPC path: %s\n", m_pending_ppc_boot_content_path.c_str());
+  std::fflush(stderr);
+
   const bool result = GetEmulationKernel().BootstrapPPC(m_pending_ppc_boot_content_path);
   m_pending_ppc_boot_content_path = {};
   return result;

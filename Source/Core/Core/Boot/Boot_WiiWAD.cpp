@@ -1,6 +1,7 @@
 // Copyright 2009 Dolphin Emulator Project
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+#include <cstdio>
 #include "Common/CommonTypes.h"
 #include "Common/MsgHandler.h"
 
@@ -15,6 +16,9 @@
 
 bool CBoot::BootNANDTitle(Core::System& system, const u64 title_id)
 {
+  std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC BOOT] BootNANDTitle title_id: 0x%016lx\n", title_id);
+  std::fflush(stderr);
+
   UpdateStateFlags([](StateFlags* state) {
     state->type = 0x04;  // TYPE_NANDBOOT
   });
@@ -32,6 +36,9 @@ bool CBoot::BootNANDTitle(Core::System& system, const u64 title_id)
 
 bool CBoot::Boot_WiiWAD(Core::System& system, const DiscIO::VolumeWAD& wad)
 {
+  std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC BOOT] Boot_WiiWAD title_id: 0x%016lx\n", wad.GetTMD().GetTitleId());
+  std::fflush(stderr);
+
   if (!WiiUtils::InstallWAD(*system.GetIOS(), wad, WiiUtils::InstallType::Temporary))
   {
     PanicAlertFmtT("Cannot boot this WAD because it could not be installed to the NAND.");

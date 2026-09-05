@@ -3,6 +3,7 @@
 
 #include "Core/HW/EXI/EXI_DeviceIPL.h"
 
+#include <cstdio>
 #include <cstring>
 #include <string>
 
@@ -282,6 +283,10 @@ void CEXIIPL::TransferByte(u8& data)
       // This is technically not very accurate :(
       UpdateRTC();
 
+      std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC EXI] EXIIPL Command: %s addr: 0x%08x\n",
+                   m_command.is_write() ? "write" : "read", m_command.address());
+      std::fflush(stderr);
+
       DEBUG_LOG_FMT(EXPANSIONINTERFACE, "IPL-DEV cmd {} {:08x} {:02x}",
                     m_command.is_write() ? "write" : "read", m_command.address(),
                     m_command.low_bits());
@@ -301,8 +306,13 @@ void CEXIIPL::TransferByte(u8& data)
         if (data != '\0')
           m_buffer += data;
 
-        if (data == '\r')
+        std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC UART CHAR] '%c' (0x%02x)\n", data, data);
+        std::fflush(stderr);
+
+        if (data == '\r' || data == '\n')
         {
+          std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC OSREPORT UART LINE] %s\n", SHIFTJISToUTF8(m_buffer).c_str());
+          std::fflush(stderr);
           NOTICE_LOG_FMT(OSREPORT, "{}", SHIFTJISToUTF8(m_buffer));
           m_buffer.clear();
         }

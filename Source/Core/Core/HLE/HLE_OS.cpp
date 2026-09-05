@@ -4,6 +4,7 @@
 #include "Core/HLE/HLE_OS.h"
 
 #include <cinttypes>
+#include <cstdio>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -91,6 +92,14 @@ static void HLE_GeneralDebugPrint(const Core::CPUThreadGuard& guard, ParameterTy
   }
 
   StringPopBackIf(&report_message, '\n');
+
+  std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC OSREPORT_HLE] %08x->%08x| %s\n", LR(ppc_state), ppc_state.pc,
+               SHIFTJISToUTF8(report_message).c_str());
+  std::fflush(stderr);
+
+  std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC OSREPORT_HLE write_console] %08x->%08x| %s\n", LR(ppc_state), ppc_state.pc,
+               SHIFTJISToUTF8(report_message).c_str());
+  std::fflush(stderr);
 
   NOTICE_LOG_FMT(OSREPORT_HLE, "{:08x}->{:08x}| {}", LR(ppc_state), ppc_state.pc,
                  SHIFTJISToUTF8(report_message));

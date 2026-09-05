@@ -3,6 +3,7 @@
 
 #include "Core/HW/EXI/EXI_Channel.h"
 
+#include <cstdio>
 #include <memory>
 
 #include "Common/Assert.h"
@@ -105,6 +106,12 @@ void CEXIChannel::RegisterMMIO(MMIO::Mapping* mmio, u32 base)
 
                    if (m_control.TSTART)
                    {
+                     if (m_channel_id == 0)
+                     {
+                       std::fprintf(stderr, "[DOLPHIN DIAGNOSTIC EXI] Ch0 CS:%d TSTART RW:%d DMA:%d Len:%u\n",
+                                    m_status.CHIP_SELECT, m_control.RW, m_control.DMA, m_control.TLEN);
+                       std::fflush(stderr);
+                     }
                      IEXIDevice* device = GetDevice(m_status.CHIP_SELECT);
                      if (device == nullptr)
                        return;
