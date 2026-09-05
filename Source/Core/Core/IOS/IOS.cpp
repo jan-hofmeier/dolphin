@@ -95,6 +95,7 @@ constexpr u32 ADDR_IOS_RESERVED_END = 0x314c;
 constexpr u32 ADDR_PH4 = 0x3150;
 constexpr u32 ADDR_PH5 = 0x3154;
 constexpr u32 ADDR_CONSOLE_TYPE_DEV = 0x30e6;
+constexpr u32 ADDR_APPLOADER_VERSION = 0x3188;
 constexpr u32 ADDR_RAM_VENDOR = 0x3158;
 constexpr u32 ADDR_BOOT_FLAG = 0x315c;
 constexpr u32 ADDR_APPLOADER_FLAG = 0x315d;
@@ -169,6 +170,7 @@ static bool SetupMemory(Memory::MemoryManager& memory, u64 ios_title_id, MemoryS
   memory.Write_U32(PLACEHOLDER, ADDR_PH4);
   memory.Write_U32(PLACEHOLDER, ADDR_PH5);
   memory.Write_U16(0x8201, ADDR_CONSOLE_TYPE_DEV);
+  memory.Write_U32(target_imv->ios_version, ADDR_APPLOADER_VERSION);
   memory.Write_U32(target_imv->ram_vendor, ADDR_RAM_VENDOR);
   memory.Write_U8(0xDE, ADDR_BOOT_FLAG);
   memory.Write_U8(0xAD, ADDR_APPLOADER_FLAG);
